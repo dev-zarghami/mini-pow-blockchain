@@ -1,0 +1,6 @@
+{
+  "difficulty": 0,
+  "blockReward": 50,
+  "targetBlockTimeSec": 60,
+  "adjustEvery": 10
+}
