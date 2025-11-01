@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Mini-Blockchain Explorer</title>
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">Mini-Chain Explorer</div>
+      <div class="top-stats">
+        <span>Height: <b>{{ stats.height ?? '—' }}</b></span>
+        <span>Bits: <b>{{ stats.bits ? '0x'+stats.bits.toString(16) : '—' }}</b></span>
+        <span>Avg Block Time: <b>{{ stats.avgBlockSec ?? '—' }}</b> s</span>
+        <span>Network Hashrate: <b>{{ stats.estHashrate }}</b></span>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="panel">
+        <div class="panel-header">
+          <h3>Blockchain View (Last 50 Blocks)</h3>
+          <div class="actions">
+            <button @click="reload()">Reload</button>
+          </div>
+        </div>
+        <div class="chain-strip" v-if="chainWindow.length">
+          <div
+            class="block-card"
+            :class="{ tip: b.index === (stats.height||-1) }"
+            v-for="b in chainWindow"
+            :key="b.index"
+            @click="openBlock(b)"
+          >
+            <div class="idx">#{{ b.index }}</div>
+            <div class="hash">{{ shortHash(hashOf(b)) }}</div>
+            <div class="txc">TXs: {{ b.transactions.length }}</div>
+            <div class="time">{{ formatTime(b.timestamp) }}</div>
+          </div>
+        </div>
+        <div class="empty" v-else>Loading chain…</div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Mempool</h3>
+            <span class="badge">{{ mempool.length }}</span>
+          </div>
+          <div class="list" v-if="mempool.length">
+            <div class="tx-row" v-for="tx in mempool" :key="tx.id" @click="openTx(tx)">
+              <div class="txid">{{ short(tx.id) }}</div>
+              <div class="meta">
+                <span>Inputs: {{ tx.inputs.length }}</span>
+                <span>Outputs: {{ tx.outputs.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="empty" v-else>No transactions in mempool.</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Confirmed Transactions (Recent)</h3>
+          </div>
+          <div class="list" v-if="recentConfirmed.length">
+            <div class="tx-row" v-for="r in recentConfirmed" :key="r.tx.id" @click="openTx(r.tx)">
+              <div class="txid">{{ short(r.tx.id) }}</div>
+              <div class="meta">
+                <span>#{{ r.blockHeight }}</span>
+                <span>Inputs: {{ r.tx.inputs.length }}</span>
+                <span>Outputs: {{ r.tx.outputs.length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="empty" v-else>Nothing to display.</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Block Modal -->
+    <div class="modal" v-if="modals.block">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Block #{{ modals.block.index }}</h3>
+          <button class="close" @click="modals.block=null">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="kv"><span>Hash</span><code>{{ hashOf(modals.block) }}</code></div>
+          <div class="kv"><span>Previous</span><code>{{ modals.block.previousHash }}</code></div>
+          <div class="kv"><span>Merkle</span><code>{{ modals.block.merkleRoot }}</code></div>
+          <div class="kv"><span>Bits</span><code>{{ '0x'+(modals.block.bits>>>0).toString(16) }}</code></div>
+          <div class="kv"><span>Nonce</span><code>{{ modals.block.nonce }}</code></div>
+          <div class="kv"><span>Timestamp</span><code>{{ formatTime(modals.block.timestamp, true) }}</code></div>
+
+          <h4>Transactions ({{ modals.block.transactions.length }})</h4>
+          <div class="list">
+            <div class="tx-row" v-for="tx in modals.block.transactions" :key="tx.id" @click="openTx(tx)">
+              <div class="txid">{{ short(tx.id) }}</div>
+              <div class="meta">
+                <span v-if="tx.isCoinbase" class="tag">COINBASE</span>
+                <span>In: {{ tx.inputs.length }}</span>
+                <span>Out: {{ tx.outputs.length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div class="modal" v-if="modals.tx">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>TX {{ short(modals.tx.id) }}</h3>
+          <button class="close" @click="modals.tx=null">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="kv"><span>TxID</span><code>{{ modals.tx.id }}</code></div>
+          <div class="split">
+            <div>
+              <h4>Inputs ({{ modals.tx.inputs.length }})</h4>
+              <table class="tab">
+                <thead><tr><th>txid</th><th>idx</th><th>pubKey</th></tr></thead>
+                <tbody>
+                  <tr v-for="i in modals.tx.inputs" :key="i.txid+':'+i.index">
+                    <td><code>{{ short(i.txid) }}</code></td>
+                    <td>{{ i.index }}</td>
+                    <td><code class="mono">{{ short(i.pubKey) }}</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <h4>Outputs ({{ modals.tx.outputs.length }})</h4>
+              <table class="tab">
+                <thead><tr><th>address</th><th>amount</th></tr></thead>
+                <tbody>
+                  <tr v-for="(o,idx) in modals.tx.outputs" :key="idx">
+                    <td><code class="mono">{{ o.address }}</code></td>
+                    <td>{{ o.amount }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div v-if="modals.tx.isCoinbase" class="note">* This is a coinbase transaction.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">© Mini-Chain Explorer • Vue 3</footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

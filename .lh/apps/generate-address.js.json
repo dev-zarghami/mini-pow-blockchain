@@ -1,0 +1,26 @@
+{
+    "sourceFile": "apps/generate-address.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1761995445197,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761995463810,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,11 @@\n const key = ec.genKeyPair();\n const pub = key.getPublic(true, 'hex'); // compressed\n const priv = key.getPrivate('hex');\n \n-const ripemd160 = crypto.createHash('ripemd160').update(Buffer.from(crypto.createHash('sha256').update(Buffer.from(pub,'hex')).digest())).digest('hex');\n+const ripemd160 = crypto.createHash('ripemd160').update(Buffer.from(crypto.createHash('sha256').update(Buffer.from(pub, 'hex')).digest())).digest('hex');\n \n-console.log('privateKey:', priv);\n-console.log('pubKey:', pub);\n-console.log('address:', ripemd160);\n+console.log('=============================');\n+console.log('🔑  Private Key:', priv);\n+console.log('🔒  Public Key :', pub);\n+console.log('🏠  Address    :', ripemd160);\n+console.log('=============================');\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761996836638,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,19 +1,18 @@\n // apps/generate-address.js\n-// generate a simple ECDSA keypair (secp256k1) and show address (RIPEMD160(SHA256(pubkey)))\n-// usage: node apps/generate-address.js\n+// Generate secp256k1 keypair and address = RIPEMD160(SHA256(pub))\n+// Run: node apps/generate-address.js\n \n const EC = require('elliptic').ec;\n const ec = new EC('secp256k1');\n const crypto = require('crypto');\n \n const key = ec.genKeyPair();\n-const pub = key.getPublic(true, 'hex'); // compressed\n const priv = key.getPrivate('hex');\n+const pub = key.getPublic(true, 'hex');\n \n-const ripemd160 = crypto.createHash('ripemd160').update(Buffer.from(crypto.createHash('sha256').update(Buffer.from(pub, 'hex')).digest())).digest('hex');\n+const sha = crypto.createHash('sha256').update(Buffer.from(pub,'hex')).digest();\n+const addr = crypto.createHash('ripemd160').update(sha).digest('hex');\n \n\\ No newline at end of file\n-console.log('=============================');\n-console.log('🔑  Private Key:', priv);\n-console.log('🔒  Public Key :', pub);\n-console.log('🏠  Address    :', ripemd160);\n-console.log('=============================');\n+console.log('privateKey:', priv);\n+console.log('pubKey    :', pub, '(compressed)');\n+console.log('address   :', addr);\n"
+                }
+            ],
+            "date": 1761995445197,
+            "name": "Commit-0",
+            "content": "// apps/generate-address.js\n// generate a simple ECDSA keypair (secp256k1) and show address (RIPEMD160(SHA256(pubkey)))\n// usage: node apps/generate-address.js\n\nconst EC = require('elliptic').ec;\nconst ec = new EC('secp256k1');\nconst crypto = require('crypto');\n\nconst key = ec.genKeyPair();\nconst pub = key.getPublic(true, 'hex'); // compressed\nconst priv = key.getPrivate('hex');\n\nconst ripemd160 = crypto.createHash('ripemd160').update(Buffer.from(crypto.createHash('sha256').update(Buffer.from(pub,'hex')).digest())).digest('hex');\n\nconsole.log('privateKey:', priv);\nconsole.log('pubKey:', pub);\nconsole.log('address:', ripemd160);\n"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "sourceFile": "package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1761992956508,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761995488148,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,20 +1,23 @@\n {\n-  \"name\": \"simple-bitcoin-node\",\n-  \"version\": \"3.1.0\",\n-  \"main\": \"server.js\",\n+  \"name\": \"mini-bitcoin\",\n+  \"version\": \"1.0.0\",\n+  \"description\": \"Educational Bitcoin-like mini blockchain (Node.js)\",\n+  \"main\": \"apps/blockchain/server.js\",\n   \"scripts\": {\n-    \"node\": \"node apps/blockchain/server.js\",\n-    \"miner\": \"node apps/miner/server.js --address $ADDRESS\",\n-    \"scanner\": \"node apps/scanner/server.js\",\n-    \"keys\": \"node apps/generate-address.js\",\n-    \"send\": \"node apps/send_tx.js --from $FROM_PUB --to $TO_PUB --amount $AMOUNT --fee $FEE\"\n+    \"start:node\": \"node apps/blockchain/server.js\",\n+    \"start:mineral\": \"node apps/miner/server.js --address $ADDRESS\",\n+    \"start:miner\": \"node apps/miner/server.js --address $ADDRESS\",\n+    \"start:scanner\": \"node apps/scanner/server.js\",\n+    \"gen:key\": \"node apps/generate-address.js\",\n+    \"send\": \"node apps/send_tx.js\"\n\\ No newline at end of file\n   },\n   \"dependencies\": {\n-    \"axios\": \"^1.6.7\",\n-    \"body-parser\": \"^1.20.2\",\n+    \"axios\": \"^1.0.0\",\n+    \"body-parser\": \"^1.20.0\",\n     \"elliptic\": \"^6.5.4\",\n     \"express\": \"^4.18.2\",\n-    \"minimist\": \"^1.2.8\",\n-    \"ws\": \"^8.18.0\"\n+    \"minimist\": \"^1.2.7\",\n+    \"stable-stringify\": \"^1.0.1\",\n+    \"ws\": \"^8.13.0\"\n   }\n-}\n+}\n"
+                },
+                {
+                    "date": 1761995762442,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,7 @@\n     \"body-parser\": \"^1.20.0\",\n     \"elliptic\": \"^6.5.4\",\n     \"express\": \"^4.18.2\",\n     \"minimist\": \"^1.2.7\",\n-    \"stable-stringify\": \"^1.0.1\",\n     \"ws\": \"^8.13.0\"\n   }\n-}\n\\ No newline at end of file\n+}\n"
+                },
+                {
+                    "date": 1761996870547,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,22 +1,21 @@\n {\n   \"name\": \"mini-bitcoin\",\n-  \"version\": \"1.0.0\",\n-  \"description\": \"Educational Bitcoin-like mini blockchain (Node.js)\",\n+  \"version\": \"1.1.0\",\n+  \"description\": \"Educational Bitcoin-like blockchain with ECDSA, P2P and compact target bits\",\n   \"main\": \"apps/blockchain/server.js\",\n   \"scripts\": {\n-    \"start:node\": \"node apps/blockchain/server.js\",\n-    \"start:mineral\": \"node apps/miner/server.js --address $ADDRESS\",\n-    \"start:miner\": \"node apps/miner/server.js --address $ADDRESS\",\n-    \"start:scanner\": \"node apps/scanner/server.js\",\n+    \"node\": \"node apps/blockchain/server.js\",\n+    \"miner\": \"node apps/miner/server.js --address $ADDRESS\",\n+    \"scanner\": \"node apps/scanner/server.js\",\n     \"gen:key\": \"node apps/generate-address.js\",\n     \"send\": \"node apps/send_tx.js\"\n   },\n   \"dependencies\": {\n-    \"axios\": \"^1.0.0\",\n-    \"body-parser\": \"^1.20.0\",\n+    \"axios\": \"^1.7.0\",\n+    \"body-parser\": \"^1.20.2\",\n     \"elliptic\": \"^6.5.4\",\n-    \"express\": \"^4.18.2\",\n-    \"minimist\": \"^1.2.7\",\n-    \"ws\": \"^8.13.0\"\n+    \"express\": \"^4.19.2\",\n+    \"minimist\": \"^1.2.8\",\n+    \"ws\": \"^8.17.0\"\n   }\n }\n"
+                }
+            ],
+            "date": 1761992956508,
+            "name": "Commit-0",
+            "content": "{\n  \"name\": \"simple-bitcoin-node\",\n  \"version\": \"3.1.0\",\n  \"main\": \"server.js\",\n  \"scripts\": {\n    \"node\": \"node apps/blockchain/server.js\",\n    \"miner\": \"node apps/miner/server.js --address $ADDRESS\",\n    \"scanner\": \"node apps/scanner/server.js\",\n    \"keys\": \"node apps/generate-address.js\",\n    \"send\": \"node apps/send_tx.js --from $FROM_PUB --to $TO_PUB --amount $AMOUNT --fee $FEE\"\n  },\n  \"dependencies\": {\n    \"axios\": \"^1.6.7\",\n    \"body-parser\": \"^1.20.2\",\n    \"elliptic\": \"^6.5.4\",\n    \"express\": \"^4.18.2\",\n    \"minimist\": \"^1.2.8\",\n    \"ws\": \"^8.18.0\"\n  }\n}"
+        }
+    ]
+}

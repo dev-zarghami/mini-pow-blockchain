@@ -1,0 +1,18 @@
+{
+    "sourceFile": "apps/p2p.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1761996699144,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1761996699144,
+            "name": "Commit-0",
+            "content": "// apps/p2p.js\n// Simple WS-based P2P layer (both server and outbound dials) with basic retry & logging.\n\nconst { WebSocketServer } = require('ws');\nconst WebSocket = require('ws');\n\nconst peersSet = new Set();\nlet messageHandlers = [];\nconst log = (...a)=>console.log('[P2P]',...a);\nconst err = (...a)=>console.error('[P2P]',...a);\n\nfunction connectToPeer(url) {\n  if ([...peersSet].some(s => s.url === url)) return;\n  const ws = new WebSocket(url);\n  ws.url = url;\n\n  ws.on('open', () => {\n    log('connected ->', url);\n  });\n  ws.on('message', (d) => {\n    try {\n      const msg = JSON.parse(d.toString());\n      for (const h of messageHandlers) h(msg, ws);\n    } catch(e) {\n      err('bad message from', url, e.message);\n    }\n  });\n  ws.on('close', () => {\n    log('disconnected <-', url);\n    peersSet.delete(ws);\n    setTimeout(() => connectToPeer(url), 2000);\n  });\n  ws.on('error', (e) => {\n    // ignore, reconnect handled by 'close'\n  });\n  peersSet.add(ws);\n}\n\nfunction initP2P({ p2pPort, peers = [], onOpen }) {\n  const wss = new WebSocketServer({ port: p2pPort });\n  wss.on('connection', (ws) => {\n    log('inbound connection');\n    peersSet.add(ws);\n    ws.on('message', (d) => {\n      try {\n        const msg = JSON.parse(d.toString());\n        for (const h of messageHandlers) h(msg, ws);\n      } catch(e) {\n        err('bad inbound msg', e.message);\n      }\n    });\n    ws.on('close', () => { peersSet.delete(ws); });\n    ws.on('error', () => {});\n  });\n  wss.on('listening', () => { if (onOpen) onOpen(); });\n\n  // dial out\n  for (const p of peers) connectToPeer(p);\n}\n\nfunction p2pBroadcast(obj) {\n  const s = JSON.stringify(obj);\n  for (const ws of [...peersSet]) {\n    if (ws.readyState === ws.OPEN) {\n      try { ws.send(s); } catch {}\n    }\n  }\n}\nfunction p2pOnMessage(fn) { messageHandlers.push(fn); }\n\nmodule.exports = { initP2P, p2pBroadcast, p2pOnMessage };\n"
+        }
+    ]
+}

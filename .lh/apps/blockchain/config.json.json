@@ -1,0 +1,70 @@
+{
+    "sourceFile": "apps/blockchain/config.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 13,
+            "patches": [
+                {
+                    "date": 1761989373425,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1761989383361,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,6 +2,6 @@\n   \"difficulty\": 1,\n   \"adjustEvery\": 10,\n   \"targetBlockTimeSec\": 300,\n   \"blockSubsidy\": 5000000000,\n-  \"halvingInterval\": 50\n+  \"halvingInterval\": 100\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761990645795,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n   \"difficulty\": 1,\n-  \"adjustEvery\": 10,\n-  \"targetBlockTimeSec\": 300,\n+  \"adjustEvery\": 5,\n+  \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 5000000000,\n\\ No newline at end of file\n-  \"halvingInterval\": 100\n-}\n+  \"halvingInterval\": 20\n+}\n"
+                },
+                {
+                    "date": 1761991649915,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n {\n-  \"difficulty\": 1,\n+  \"difficulty\": 1000000,\n   \"adjustEvery\": 5,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 5000000000,\n   \"halvingInterval\": 20\n"
+                },
+                {
+                    "date": 1761991835312,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n {\n-  \"difficulty\": 1000000,\n+  \"difficulty\": 1,\n   \"adjustEvery\": 5,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 5000000000,\n   \"halvingInterval\": 20\n"
+                },
+                {
+                    "date": 1761991947197,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n   \"difficulty\": 1,\n   \"adjustEvery\": 5,\n   \"targetBlockTimeSec\": 30,\n-  \"blockSubsidy\": 5000000000,\n+  \"blockSubsidy\": 500,\n   \"halvingInterval\": 20\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761992181108,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n-  \"difficulty\": 1,\n+  \"difficulty\": 176,\n   \"adjustEvery\": 5,\n   \"targetBlockTimeSec\": 30,\n-  \"blockSubsidy\": 500,\n+  \"blockSubsidy\": 5000000000,\n   \"halvingInterval\": 20\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761992420609,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n   \"difficulty\": 176,\n   \"adjustEvery\": 5,\n   \"targetBlockTimeSec\": 30,\n-  \"blockSubsidy\": 5000000000,\n-  \"halvingInterval\": 20\n+  \"blockSubsidy\": 500,\n+  \"halvingInterval\": 1000\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761992445938,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n {\n-  \"difficulty\": 176,\n+  \"difficulty\": 1,\n   \"adjustEvery\": 5,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 500,\n   \"halvingInterval\": 1000\n"
+                },
+                {
+                    "date": 1761994313418,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n-  \"difficulty\": 1,\n-  \"adjustEvery\": 5,\n+  \"difficulty\": 7353,\n+  \"adjustEvery\": 50,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 500,\n   \"halvingInterval\": 1000\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761994324996,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n {\n-  \"difficulty\": 7353,\n+  \"difficulty\": 1000000000000,\n   \"adjustEvery\": 50,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 500,\n   \"halvingInterval\": 1000\n"
+                },
+                {
+                    "date": 1761994667398,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,6 @@\n {\n-  \"difficulty\": 1000000000000,\n+  \"difficulty\": 1,\n   \"adjustEvery\": 50,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 500,\n   \"halvingInterval\": 1000\n"
+                },
+                {
+                    "date": 1761994974533,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n   \"difficulty\": 1,\n-  \"adjustEvery\": 50,\n+  \"adjustEvery\": 10,\n   \"targetBlockTimeSec\": 30,\n   \"blockSubsidy\": 500,\n   \"halvingInterval\": 1000\n }\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1761994985645,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n {\n   \"difficulty\": 1,\n   \"adjustEvery\": 10,\n-  \"targetBlockTimeSec\": 30,\n+  \"targetBlockTimeSec\": 15,\n   \"blockSubsidy\": 500,\n   \"halvingInterval\": 1000\n }\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1761989373425,
+            "name": "Commit-0",
+            "content": "{\n  \"difficulty\": 1,\n  \"adjustEvery\": 10,\n  \"targetBlockTimeSec\": 300,\n  \"blockSubsidy\": 5000000000,\n  \"halvingInterval\": 50\n}"
+        }
+    ]
+}
