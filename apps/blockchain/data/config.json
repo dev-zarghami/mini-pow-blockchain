@@ -1,0 +1,9 @@
+{
+  "adjustEvery": 10,
+  "targetBlockTimeSec": 10,
+  "blockSubsidy": 5,
+  "halvingInterval": 100,
+  "coinbaseMaturity": 2,
+  "maxBlockTx": 25,
+  "bits": 491835255
+}

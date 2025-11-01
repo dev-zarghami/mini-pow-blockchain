@@ -1,0 +1,43 @@
+{
+  "index": 9,
+  "previousHash": "0000009b75d6a4e2118b67887efcdc845b3bfdaade030cc18bdb3fe981267656",
+  "timestamp": 1762008822771,
+  "transactions": [
+    {
+      "isCoinbase": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "0a0cf279ea90a30a5cfc8593376146b5bcde7564",
+          "amount": 5.05
+        }
+      ],
+      "id": "4f2d3dcbdd23ba8e01d27ce57928d848472c127c7be2de741f0ef64afeefd84c"
+    },
+    {
+      "inputs": [
+        {
+          "txid": "a89e84bc46393078a85a7d788833f689c7a240da7bea1bdfd972498385eed8bd",
+          "index": 0,
+          "pubKey": "02bbf0e463eb396ee2992aef7f92377eecdb2173e1cc920860971340af0c32ccd6",
+          "sig": "3046022100e897670d1742970d860f48d20b4854b71419e1bf6844d6840b525936ff4dea73022100f04324579400e28611c2eeb3c9bfb2e7cf637e44d14d6c894d7d767801c93d49"
+        }
+      ],
+      "outputs": [
+        {
+          "address": "6578fd7739a4d86eda4cf7460db17a439f6af982",
+          "amount": 1
+        },
+        {
+          "address": "7001ea00801b23e345e997467c1abde0cf6b5207",
+          "amount": 3.95
+        }
+      ],
+      "id": "0728dda8c4a48d012c75046e200108545184aeb10387495e3a7a51b9156e43e6"
+    }
+  ],
+  "merkleRoot": "0539d8de14cd51b9eba485eb0ac046ce1ee2a708ff1ce9370b6604ef14d101a1",
+  "nonce": 50155,
+  "bits": 503382015,
+  "hash": "000000e16a87941f025ca4a5889954d6434d7e1d7894dc84275f49ca5dfce285"
+}

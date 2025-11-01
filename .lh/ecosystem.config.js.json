@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 25,
+            "activePatchIndex": 32,
             "patches": [
                 {
                     "date": 1761997801490,
@@ -108,6 +108,34 @@
                 {
                     "date": 1762002849213,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,9 @@\n             watch: false,\n             env: {\n                 NODE_ENV: \"production\",\n                 NODE_URL: \"http://localhost:3000\",\n-                WS_URL: \"http://localhost:3001\",\n+                NODE_WS: \"http://localhost:3001\",\n                 SCANNER_PORT: 5000\n             },\n             autorestart: true,\n             restart_delay: 2000,\n"
+                },
+                {
+                    "date": 1762004374927,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -21,9 +21,10 @@\n             cwd: \".\",\n             watch: false,\n             env: {\n                 NODE_ENV: \"production\",\n-                NODE_URL: \"http://localhost:3000\"\n+                NODE_URL: \"http://localhost:3000\",\n+                NODE_WS: \"http://localhost:3001\",\n             },\n             autorestart: true,\n             restart_delay: 2000,\n         },\n"
+                },
+                {
+                    "date": 1762008478971,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -28,8 +28,22 @@\n             autorestart: true,\n             restart_delay: 2000,\n         },\n         {\n+            name: \"miner-2\",\n+            script: \"apps/miner/server.js\",\n+            args: \"--address 0a0cf279ea90a30a5cfc8593376146b5bcde7564\",\n+            cwd: \".\",\n+            watch: false,\n+            env: {\n+                NODE_ENV: \"production\",\n+                NODE_URL: \"http://localhost:3000\",\n+                NODE_WS: \"http://localhost:3001\",\n+            },\n+            autorestart: true,\n+            restart_delay: 2000,\n+        },\n+        {\n             name: \"scanner-web\",\n             script: \"apps/scanner/webserver.js\",\n             cwd: \".\",\n             watch: false,\n"
+                },
+                {
+                    "date": 1762008491523,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -30,9 +30,9 @@\n         },\n         {\n             name: \"miner-2\",\n             script: \"apps/miner/server.js\",\n-            args: \"--address 0a0cf279ea90a30a5cfc8593376146b5bcde7564\",\n+            args: \"--address 7001ea00801b23e345e997467c1abde0cf6b5207\",\n             cwd: \".\",\n             watch: false,\n             env: {\n                 NODE_ENV: \"production\",\n"
+                },
+                {
+                    "date": 1762008581828,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -42,8 +42,22 @@\n             autorestart: true,\n             restart_delay: 2000,\n         },\n         {\n+            name: \"miner-3\",\n+            script: \"apps/miner/server.js\",\n+            args: \"--address 7001ea00801b23e345e997467c1abde0cf6b5207\",\n+            cwd: \".\",\n+            watch: false,\n+            env: {\n+                NODE_ENV: \"production\",\n+                NODE_URL: \"http://localhost:3000\",\n+                NODE_WS: \"http://localhost:3001\",\n+            },\n+            autorestart: true,\n+            restart_delay: 2000,\n+        },\n+        {\n             name: \"scanner-web\",\n             script: \"apps/scanner/webserver.js\",\n             cwd: \".\",\n             watch: false,\n"
+                },
+                {
+                    "date": 1762008600743,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -44,9 +44,9 @@\n         },\n         {\n             name: \"miner-3\",\n             script: \"apps/miner/server.js\",\n-            args: \"--address 7001ea00801b23e345e997467c1abde0cf6b5207\",\n+            args: \"--address 6578fd7739a4d86eda4cf7460db17a439f6af982\",\n             cwd: \".\",\n             watch: false,\n             env: {\n                 NODE_ENV: \"production\",\n"
+                },
+                {
+                    "date": 1762008750913,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -56,8 +56,22 @@\n             autorestart: true,\n             restart_delay: 2000,\n         },\n         {\n+            name: \"miner-4\",\n+            script: \"apps/miner/server.js\",\n+            args: \"--address 6578fd7739a4d86eda4cf7460db17a439f6af982\",\n+            cwd: \".\",\n+            watch: false,\n+            env: {\n+                NODE_ENV: \"production\",\n+                NODE_URL: \"http://localhost:3000\",\n+                NODE_WS: \"http://localhost:3001\",\n+            },\n+            autorestart: true,\n+            restart_delay: 2000,\n+        },\n+        {\n             name: \"scanner-web\",\n             script: \"apps/scanner/webserver.js\",\n             cwd: \".\",\n             watch: false,\n"
+                },
+                {
+                    "date": 1762008757161,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -58,9 +58,9 @@\n         },\n         {\n             name: \"miner-4\",\n             script: \"apps/miner/server.js\",\n-            args: \"--address 6578fd7739a4d86eda4cf7460db17a439f6af982\",\n+            args: \"--address 7eab62390df6ce4fd2afcde38b184d29fd0cb136\",\n             cwd: \".\",\n             watch: false,\n             env: {\n                 NODE_ENV: \"production\",\n"
                 }
             ],
             "date": 1761997801490,

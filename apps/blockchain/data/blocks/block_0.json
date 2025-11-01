@@ -1,0 +1,22 @@
+{
+  "index": 0,
+  "previousHash": "0",
+  "timestamp": 1762008505985,
+  "transactions": [
+    {
+      "id": "genesis",
+      "isCoinbase": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "genesis",
+          "amount": 0
+        }
+      ]
+    }
+  ],
+  "merkleRoot": "",
+  "nonce": 0,
+  "bits": 503382015,
+  "hash": "9aa783c9f86d79d9251187be14cd8650a96c77d77da202c320861d5b632e4ce8"
+}

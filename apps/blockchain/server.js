@@ -26,14 +26,15 @@ const P2P_PORT = process.env.P2P_PORT;
 const PEERS = process.env.PEERS ? JSON.parse(process.env.PEERS) : []
 
 let config = {
-  adjustEvery: 10,          // blocks per retarget
-  targetBlockTimeSec: 30,   // target block time
-  blockSubsidy: 50,
-  halvingInterval: 200,     // in blocks
-  coinbaseMaturity: 10,
-  maxBlockTx: 100,  // Compact difficulty bits (Bitcoin-like): 0x1eXXXXXX ~ easy; 0x1dXXXXXX is BTC-ish
-  bits: 0x1f00ffff           // very easy default (increase difficulty by lowering exponent or mantissa)
+  adjustEvery: 10,          // Bitcoin adjusts difficulty every 10 blocks
+  targetBlockTimeSec: 10,   // Target block time: 30 seconds
+  blockSubsidy: 5,          // Initial mining reward: 5 BTC
+  halvingInterval: 100,     // Reward halving occurs every 500
+  coinbaseMaturity: 2,      // Coinbase rewards can be spent only after 2 confirmations
+  maxBlockTx: 25,           // Larger block capacity to simulate realistic blocks
+  bits: 0x1e00ffff          // Initial network difficulty
 };
+
 const CONFIG_FILE = DATA_DIR + '/config.json';
 if (fs.existsSync(CONFIG_FILE)) {
   try { Object.assign(config, JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'))); } catch { }
@@ -47,6 +48,7 @@ let mempool = {};           // txid -> tx
 let utxo = new Map();       // `${txid}:${index}` -> { amount, address, blockHeight, isCoinbase }
 let seenTx = new Set();     // prevent gossip loops
 let seenBlockHash = new Set();
+let mempoolSpent = new Set(); // 'txid:index'
 
 // -------------------- Utils --------------------
 const sha256Hex = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
@@ -81,27 +83,38 @@ function merkleRoot(txids) {
 
 // --- Compact Target Bits (Bitcoin-like) ---
 function bitsToTarget(bits) {
-  const exp = (bits >>> 24) & 0xff;
+  const size = (bits >>> 24) & 0xff;
   let mant = BigInt(bits & 0x007fffff);
-  if (bits & 0x00800000) mant = mant | (1n << 23n); // sign bit not used; keep positive
-  // target = mantissa * 256^(exp-3)
-  const shift = BigInt(8 * (exp - 3));
-  return mant << shift;
+  let target;
+  if (size <= 3) {
+    const shift = 8n * (3n - BigInt(size));
+    target = mant >> shift;
+  } else {
+    const shift = 8n * (BigInt(size) - 3n);
+    target = mant << shift;
+  }
+  return target;
 }
+
 function targetToBits(target) {
-  // convert BigInt target to compact
+  if (target <= 0n) return 0;
   let hex = target.toString(16);
   if (hex.length % 2) hex = '0' + hex;
-  const size = Math.ceil(hex.length / 2);
-  let mant;
+  let size = Math.ceil(hex.length / 2);
+  let mantBytes;
   if (size <= 3) {
-    mant = BigInt('0x' + hex.padEnd(6, '0'));
+    mantBytes = hex.padStart(6, '0');
   } else {
-    mant = BigInt('0x' + hex.slice(0, 6));
+    mantBytes = hex.slice(0, 6);
+    if (parseInt(mantBytes.slice(0, 2), 16) & 0x80) {
+      mantBytes = ('00' + mantBytes.slice(0, 4));
+      size += 1;
+    }
   }
-  let bits = (size << 24) | Number(mant & 0x007fffff);
-  return bits >>> 0;
+  let mant = parseInt(mantBytes, 16) & 0x007fffff;
+  return ((size << 24) | mant) >>> 0;
 }
+
 function hashMeetsBits(hexHash, bits) {
   const h = BigInt('0x' + hexHash);
   const target = bitsToTarget(bits);
@@ -220,6 +233,11 @@ function validateBlock(block) {
     if (block.previousHash !== headerHash(tip)) throw new Error('prev hash mismatch');
   }
 
+  // timestamp sanity check
+  const MAX_FUTURE = 2 * 60 * 60 * 1000; // 2 hours
+  if (block.timestamp > Date.now() + MAX_FUTURE)
+    throw new Error('timestamp too far in future');
+
   // basic header checks
   const txids = block.transactions.map(t => t.id);
   if (merkleRoot(txids) !== block.merkleRoot) throw new Error('merkle mismatch');
@@ -247,6 +265,10 @@ function validateBlock(block) {
         const ent = temp.get(key);
         if (!ent) throw new Error('missing input ' + key);
         // signature check against original tx object (already contains sigs)
+        // enforce coinbase maturity
+        if (ent.isCoinbase && (block.index - ent.blockHeight) < config.coinbaseMaturity) {
+          throw new Error('coinbase not mature');
+        }
         verifyInputSig(tx, idx);
         // pubKey matches address
         const addr = pubKeyToAddress(i.pubKey);
@@ -277,7 +299,10 @@ function applyBlock(block) {
   for (const tx of block.transactions) {
     for (const i of tx.inputs || []) utxo.delete(`${i.txid}:${i.index}`);
     tx.outputs.forEach((o, idx) => utxo.set(`${tx.id}:${idx}`, { amount: o.amount, address: o.address, blockHeight: block.index, isCoinbase: !!tx.isCoinbase }));
-    if (mempool[tx.id]) delete mempool[tx.id];
+    if (mempool[tx.id]) {
+      for (const i of (tx.inputs || [])) mempoolSpent.delete(`${i.txid}:${i.index}`);
+      delete mempool[tx.id];
+    }
   }
   chain.push(block);
   saveBlock(block);
@@ -345,8 +370,18 @@ app.post('/transactions', (req, res) => {
     if (!tx.id) tx.id = txIdFor(tx);
     // validation against current UTXO/state
     validateTx(tx, chain.length);
+
+    // prevent mempool double spend
+    for (const i of tx.inputs) {
+      const key = `${i.txid}:${i.index}`;
+      if (mempoolSpent.has(key)) throw new Error('mempool double spend');
+    }
+
     if (mempool[tx.id]) return res.status(200).json({ ok: true, id: tx.id, note: 'duplicate in mempool' });
+
     mempool[tx.id] = tx;
+    for (const i of tx.inputs) mempoolSpent.add(`${i.txid}:${i.index}`);
+
     seenTx.add(tx.id);
     log(`+ mempool tx ${tx.id.slice(0, 16)}…`);
     // Gossip to peers
@@ -471,7 +506,13 @@ p2pOnMessage(async (msg) => {
       if (!tx.id) tx.id = txIdFor(tx);
       if (seenTx.has(tx.id) || mempool[tx.id]) return;
       validateTx(tx, chain.length);
+      for (const i of tx.inputs) {
+        const k = `${i.txid}:${i.index}`;
+        if (mempoolSpent.has(k)) throw new Error('mempool double spend');
+      }
       mempool[tx.id] = tx;
+      for (const i of tx.inputs) mempoolSpent.add(`${i.txid}:${i.index}`);
+
       seenTx.add(tx.id);
       log(`[P2P] tx ${tx.id.slice(0, 12)}… added from peer`);
       // rebroadcast

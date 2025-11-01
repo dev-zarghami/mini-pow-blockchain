@@ -1,0 +1,22 @@
+{
+  "index": 2,
+  "previousHash": "000000b348941fe8cb5e427740842692912f28ef4ff3142f5f5dbb72d7f76744",
+  "timestamp": 1762008561008,
+  "transactions": [
+    {
+      "isCoinbase": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "address": "0a0cf279ea90a30a5cfc8593376146b5bcde7564",
+          "amount": 5
+        }
+      ],
+      "id": "2257f219a27a777f95778e33728247c7e50409948df8cb8711558ddc1ad4e1e6"
+    }
+  ],
+  "merkleRoot": "2257f219a27a777f95778e33728247c7e50409948df8cb8711558ddc1ad4e1e6",
+  "nonce": 142815,
+  "bits": 503382015,
+  "hash": "000000bce94cc71c12f36be74fc32f1fd2b529df45983fe3a3e7bec9639eefc6"
+}
